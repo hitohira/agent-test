@@ -6,3 +6,5 @@ langchain_community
 mcp
 langchain-mcp-adapters
 langgraph
+pytest
+flake8
