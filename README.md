@@ -68,7 +68,7 @@ localではローカルのmountディレクトリに生成したファイルが�
 mcp-weatherの場合、以下のようなディレクトリ構造となる。
 
 ```
-diag-agent-exec/  
+mcp-weather/  
  ├── Makefile  
  ├── Dockerfile  
  ├── requirements.txt  
