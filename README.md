@@ -12,6 +12,12 @@ MCPを使ってLangGraphからOpenAIのAPIを実行して天気予報します�
 MCPサーバとして天気情報を取得するWeatherとダミーのRoomStatusNowを作成しています。  
 賢いモデルだとWeatherのみ呼び出しますが、そうでないモデルは両方呼び出すことがあります。
 
+## file-edit
+
+FileIO用のMCPサーバを定義してAIエージェントがファイル操作します。  
+make runではDocker上の/tmpで操作され、実行終了後ファイルはなくなります。  
+make localするとmount/以下にファイル生成されます。  
+
 ## 注意事項
 
 天気予報には天気予報APIを使用しています。  

@@ -1,0 +1,8 @@
+requests
+python-dotenv
+langchain
+langchain_openai
+langchain_community
+mcp
+langchain-mcp-adapters
+langgraph
