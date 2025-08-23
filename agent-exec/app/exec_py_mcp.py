@@ -11,13 +11,14 @@ mcp = FastMCP("ExecutePythonByFilename")
 tmp_dir = "/tmp"
 
 @mcp.tool()
-def run_python_file(python_filename: str) -> dict:
+def run_python_file(python_filename: str, args_list: list[str] = None) -> dict:
     """
     指定された Python ファイルをsubprocessとして実行し、
     終了コード・標準出力・標準エラー出力を dict 型で返します。
 
     Args:
         filename (str): 実行するPython ファイル名。
+        args_list (list[str], optional): スクリプトに渡す引数のリスト。
 
     Returns:
         dict: 実行結果を含む辞書。以下のキーを持ちます：
@@ -37,9 +38,13 @@ def run_python_file(python_filename: str) -> dict:
             "stderr": "filename(" + filename +") does not exist."
         }
 
+    command = ["python", full_path]
+    if args_list:
+        command.extend(args_list)
+
     try:
         result = subprocess.run(
-            ["python", full_path],
+            command,
             capture_output=True,
             text=True,
             check=False
