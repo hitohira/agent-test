@@ -45,3 +45,19 @@ OpenAIのAPIは利用者がAPIキーを取得し、.envファイルに設定す�
 `OPENAI_API_KEY=APIキーの値`  
 
 APIの料金は利用者が支払うことになります。
+
+
+## 実行方法
+
+makeとdockerがインストール済みであることが前提となります。  
+
+各ディレクトリに入ってdockerイメージをbuildします。
+`make build`
+
+次にdockerイメージを起動してPythonスクリプトを実行します。
+`make run`または`make local`
+runでは作成したファイルは実行終了時に削除されます。  
+localではローカルのmountディレクトリに生成したファイルが残ります。  
+
+実行結果サンプルはlogディレクトリにいくつか格納しました。
+

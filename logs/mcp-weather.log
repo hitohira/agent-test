@@ -1,0 +1,148 @@
+~/agent-test/mcp-weather$ make run
+docker run -it --rm mcp-weather-runner
+Processing request of type ListToolsRequest
+Processing request of type ListToolsRequest
+Processing request of type CallToolRequest
+Processing request of type ListToolsRequest
+================================ System Message ================================
+
+あなたは親しみやすいアナウンサーです。音声読み上げしやすいような150字程度の文章にしてください。
+================================ Human Message =================================
+
+明日の天気とおすすめの服装は？
+================================== Ai Message ==================================
+Tool Calls:
+  get_weather (call_6bYcQ3MlD2npGD8W1zs63hVV)
+ Call ID: call_6bYcQ3MlD2npGD8W1zs63hVV
+  Args:
+    weather_code: 130010
+================================= Tool Message =================================
+Name: get_weather
+
+{
+  "publicTime": "2025-08-23T17:00:00+09:00",
+  "publicTimeFormatted": "2025/08/23 17:00:00",
+  "publishingOffice": "気象庁",
+  "title": "東京都 東京 の天気",
+  "link": "",
+  "description": {
+    "publicTime": "2025-08-23T16:39:00+09:00",
+    "publicTimeFormatted": "2025/08/23 16:39:00",
+    "headlineText": "",
+    "bodyText": "",
+    "text": "　関東甲信地方は高気圧に覆われていますが、湿った空気の影響を受けています。\n\n　東京地方は、晴れや曇りとなっています。\n\n　２３日は、高気圧に覆われますが、湿った空気の影響を受ける見込みです。このため、晴れますが、多摩西部では夕方は雷を伴い激しい雨の降る所があるでしょう。\n\n　２４日は、引き続き高気圧に覆われますが、湿った空気の影響を受ける見込みです。このため、晴れで昼前から時々曇りとなり、昼過ぎから夕方は多摩地方を中心に雷を伴い非常に激しい雨の降る所があるでしょう。\n\n【関東甲信地方】\n　関東甲信地方は、晴れや曇りとなっていますが、雷を伴った激しい雨の降っている所があります。\n\n　２３日は、高気圧に覆われますが、湿った空気の影響を受ける見込みです。このため、晴れや曇りで、雷を伴い激しい雨の降る所があるでしょう。\n\n　２４日は、引き続き高気圧に覆われますが、湿った空気の影響を受ける見込みです。このため、晴れや曇りで、午後は雷を伴い非常に激しい雨の降る所があるでしょう。\n\n　関東地方と伊豆諸島の海上では、２３日から２４日にかけて、波がやや高いでしょう。"
+  },
+  "forecasts": [
+    {
+      "date": "2025-08-23",
+      "dateLabel": "今日",
+      "telop": "晴れ",
+      "detail": {
+        "weather": "晴れ　多摩西部　では　夕方　雨　で　雷を伴い　激しく　降る",
+        "wind": "南の風　２３区西部　では　南の風　やや強く",
+        "wave": "１メートル　後　０．５メートル"
+      },
+      "temperature": {
+        "min": {
+          "celsius": null,
+          "fahrenheit": null
+        },
+        "max": {
+          "celsius": null,
+          "fahrenheit": null
+        }
+      },
+      "chanceOfRain": {
+        "T00_06": "--%",
+        "T06_12": "--%",
+        "T12_18": "--%",
+        "T18_24": "20%"
+      },
+      "image": {
+        "title": "晴れ",
+        "url": "https://www.jma.go.jp/bosai/forecast/img/100.svg",
+        "width": 80,
+        "height": 60
+      }
+    },
+    {
+      "date": "2025-08-24",
+      "dateLabel": "明日",
+      "telop": "晴のち時々曇",
+      "detail": {
+        "weather": "晴れ　昼前　から　時々　くもり　所により　昼過ぎ　から　夕方　雨　で　雷を伴い　非常に　激しく　降る",
+        "wind": "北西の風　後　南の風",
+        "wave": "０．５メートル"
+      },
+      "temperature": {
+        "min": {
+          "celsius": "27",
+          "fahrenheit": "80.6"
+        },
+        "max": {
+          "celsius": "37",
+          "fahrenheit": "98.6"
+        }
+      },
+      "chanceOfRain": {
+        "T00_06": "0%",
+        "T06_12": "10%",
+        "T12_18": "20%",
+        "T18_24": "20%"
+      },
+      "image": {
+        "title": "晴のち時々曇",
+        "url": "https://www.jma.go.jp/bosai/forecast/img/110.svg",
+        "width": 80,
+        "height": 60
+      }
+    },
+    {
+      "date": "2025-08-25",
+      "dateLabel": "明後日",
+      "telop": "曇時々晴",
+      "detail": {
+        "weather": "くもり　時々　晴れ",
+        "wind": "北の風　後　南の風",
+        "wave": "０．５メートル"
+      },
+      "temperature": {
+        "min": {
+          "celsius": "27",
+          "fahrenheit": "80.6"
+        },
+        "max": {
+          "celsius": "34",
+          "fahrenheit": "93.2"
+        }
+      },
+      "chanceOfRain": {
+        "T00_06": "30%",
+        "T06_12": "30%",
+        "T12_18": "30%",
+        "T18_24": "30%"
+      },
+      "image": {
+        "title": "曇時々晴",
+        "url": "https://www.jma.go.jp/bosai/forecast/img/201.svg",
+        "width": 80,
+        "height": 60
+      }
+    }
+  ],
+  "location": {
+    "area": "関東",
+    "prefecture": "東京都",
+    "district": "東京地方",
+    "city": "東京"
+  },
+  "copyright": ""
+}
+================================== Ai Message ==================================
+
+明日の東京は、晴れのち時々くもりの予報です。最高気温は37度ととても暑くなりそうです。昼過ぎから夕方にかけては、雷を伴う激しい雨の可能性もあります。通気性の良い半袖や帽子、日傘がおすすめです。急な雨に備えて折りたたみ傘もお持ちください。
+🔢 使用トークン数: 1940
+📥 入力トークン: 1825
+📤 出力トークン: 115
+💰 推定コスト: $0.004570
+~/agent-test/mcp-weather$
