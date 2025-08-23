@@ -55,9 +55,133 @@ makeとdockerがインストール済みであることが前提となります�
 `make build`
 
 次にdockerイメージを起動してPythonスクリプトを実行します。
-`make run`または`make local`
+`make run`または`make local`  
 runでは作成したファイルは実行終了時に削除されます。  
 localではローカルのmountディレクトリに生成したファイルが残ります。  
 
-実行結果サンプルはlogディレクトリにいくつか格納しました。
+実行結果サンプルをlogsディレクトリにいくつか格納しました。
+
+
+## コードの説明
+
+mcp-weatherの場合、以下のようなディレクトリ構造となる。
+
+  diag-agent-exec/  
+   ├── Makefile  
+   ├── Dockerfile  
+   ├── requirements.txt  
+   └── app/  
+       ├── mcp_test.py  
+       ├── room_mcp.py  
+       ├── weather.py  
+       └── weather_mcp.py  
+
+Makefileはdockerコマンドをラッパーして実行しやすくするmakeの定義を記載している。  
+Dockerfileはapp以下をデプロイするdockerイメージを記載している。  
+requirements.txtはdockerにインストールするpythonモジュールを記載している。  
+app以下は実行されるPythonファイルと、MCPを定義したファイルを配置している。  
+
+
+MCPサーバを定義しているweather\_mcp.pyについて中身を見てみる。
+```
+from mcp.server.fastmcp import FastMCP
+import weather
+import sys
+import io
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+mcp = FastMCP("Weather")
+
+@mcp.tool()
+def get_weather(weather_code: str) -> dict:
+    """ 天気予報APIからwather_codeの天気を取得する。東京の場合は130010 """
+    return weather.get(weather_code)
+
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")
+```
+内容はシンプルで、
+` mcp = FastMCP("Weather")`にMCPの名前つけるのと、
+MCPとして提供したい関数に`@mcp.tool()`をつけていくのが修正箇所で簡単にMCPで機能をAIに提供できる。
+
+
+次にメイン処理であるmcp\_test.pyを見てみる。
+```
+# OpenAI APIキーを環境変数に設定しておく
+# .envというファイルを作成し、OPENAI_API_KEY=<API KEY>を記載する
+load_dotenv()
+```
+こちらで.envというファイルを読み込んでAPIキー情報を環境変数としてexportする。  
+.envはgitにアップしていないので利用者が作成する必要がある。
+
+```
+# OpenAIのモデルのインスタンスを作成
+llm = ChatOpenAI(
+    model_name="gpt-4.1",
+    temperature=0,
+)
+```
+ここで使用する生成AIの種類を定義する。今回はgpt-4.1を使用している。
+
+```
+client = MultiServerMCPClient(
+    {
+        "Weather": {
+            "command": "python",
+            "args": ["/app/weather_mcp.py"],
+            "transport": "stdio",
+        },
+        "RoomStatusNow": {
+            "command": "python",
+            "args": ["/app/room_mcp.py"],
+            "transport": "stdio",
+        },
+    }
+)
+```
+ここで先ほど定義したWeatherのMCPなどを生成AIが認識できるようなオブジェクトを作成している。
+
+```
+async def main():
+    response = None
+    tools = await client.get_tools()
+    agent = create_react_agent(
+        llm,
+        tools,
+    )
+```
+ここで前2つで定義していた生成AIとMCPのツール群からAIエージェントを作成している。
+
+```
+    messages = [
+        SystemMessage(
+            content=(
+                "あなたは親しみやすいアナウンサーです。"
+                "音声読み上げしやすいような150字程度の文章にしてください。"
+            )
+        ),
+        HumanMessage(
+            content=(
+                "明日の天気とおすすめの服装は？"
+            )
+        )
+    ]
+
+    with get_openai_callback() as cb:
+        response = await agent.ainvoke(
+            {"messages": messages}
+        )
+
+        for msg in response["messages"]:
+            msg.pretty_print()
+
+        print(f"🔢 使用トークン数: {cb.total_tokens}")
+        print(f"📥 入力トークン: {cb.prompt_tokens}")
+        print(f"📤 出力トークン: {cb.completion_tokens}")
+        print(f"💰 推定コスト: ${cb.total_cost:.6f}")
+```
+最後にagent.ainvokeで生成AIにメッセージを渡して処理を実行させている。
+
 
