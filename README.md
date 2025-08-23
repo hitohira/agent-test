@@ -18,7 +18,7 @@ FileIO用のMCPサーバを定義してAIエージェントがファイル操作
 make runではDocker上の/tmpで操作され、実行終了後ファイルはなくなります。  
 make localするとmount/以下にファイル生成されます。  
 
-## agent-exec
+## mcp-exec
 
 file-editにさらにAIエージェントが作成したPythonファイルを実行できる機能を付加しました。  
 AIが計算して答えを導くことが可能です。  
@@ -30,8 +30,8 @@ Docker上の非rootユーザで実行させることでAIの実行影響を制�
 
 ## diag-agent-exec
 
-agent-execを機能強化し、対話形式でユーザが指示を出せるようにしました。  
-agent-exec同様にAIエージェントが強い権限を持つので注意してください。  
+mcp-execを機能強化し、対話形式でユーザが指示を出せるようにしました。  
+mcp-exec同様にAIエージェントが強い権限を持つので注意してください。  
 Pythonのモジュールがない場合はsys.executable -m pip install モジュール名を実行させることでDocker内にインストールさせられます。。  
 対話では過去のメッセージを全て保持するので、やり取りが長くなるほど課金額が大きくなります。  
 
