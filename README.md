@@ -4,11 +4,11 @@ AIエージェントの動作理解用のテスト実装です。
 
 ## simple-weather
 
-MCPを使わずにLangChainからOpenAIのAPIを実行して天気予報します。
+MCPを使わずにLangChainからOpenAIのAPIを実行して明日の天気とおすすめの服装を教えてくれます。
 
 ## mcp-weather
 
-MCPを使ってLangGraphからOpenAIのAPIを実行して天気予報します。  
+MCPを使ってLangGraphからOpenAIのAPIを実行して明日の天気とおすすめの服装を教えてくれます。  
 MCPサーバとして天気情報を取得するWeatherとダミーのRoomStatusNowを作成しています。  
 賢いモデルだとWeatherのみ呼び出しますが、そうでないモデルは両方呼び出すことがあります。
 
@@ -65,7 +65,8 @@ localではローカルのmountディレクトリに生成したファイルが�
 ## コードの説明
 
 ### ディレクトリ後続
-mcp-weatherの場合、以下のようなディレクトリ構造となる。
+mcp-weatherの場合、以下のようなディレクトリ構造となります。  
+他の機能もほぼ同様です。
 
 ```
 mcp-weather/  
@@ -79,14 +80,14 @@ mcp-weather/
      └── weather_mcp.py  
 ```
 
-Makefileはdockerコマンドをラッパーして実行しやすくするmakeの定義を記載している。  
-Dockerfileはapp以下をデプロイするdockerイメージを記載している。  
-requirements.txtはdockerにインストールするpythonモジュールを記載している。  
-app以下は実行されるPythonファイルと、MCPを定義したファイルを配置している。  
+Makefileはdockerコマンドをラッパーして実行しやすくするmakeの定義を記載しています。  
+Dockerfileはapp以下をデプロイするdockerイメージを記載しています。  
+requirements.txtはdockerにインストールするpythonモジュールを記載しています。  
+app以下は実行されるPythonファイルと、MCPを定義したファイルを配置しています。  
 
 ### コードの内容
 
-MCPサーバを定義しているweather\_mcp.pyについて中身を見てみる。
+MCPサーバを定義しているweather\_mcp.pyについて中身を見ます。
 ```
 from mcp.server.fastmcp import FastMCP
 import weather
@@ -108,17 +109,17 @@ if __name__ == "__main__":
 ```
 内容はシンプルで、
 ` mcp = FastMCP("Weather")`にMCPの名前つけるのと、
-MCPとして提供したい関数に`@mcp.tool()`をつけていくのが修正箇所で簡単にMCPで機能をAIに提供できる。
+MCPとして提供したい関数に`@mcp.tool()`をつけていくのが修正箇所で簡単にMCPで機能をAIに提供できます。
 
 
-次にメイン処理であるmcp\_test.pyを見てみる。
+次にメイン処理であるmcp\_test.pyを見ます。
 ```
 # OpenAI APIキーを環境変数に設定しておく
 # .envというファイルを作成し、OPENAI_API_KEY=<API KEY>を記載する
 load_dotenv()
 ```
-こちらで.envというファイルを読み込んでAPIキー情報を環境変数としてexportする。  
-.envはgitにアップしていないので利用者が作成する必要がある。
+こちらで.envというファイルを読み込んでAPIキー情報を環境変数としてexportします。  
+.envはgitにアップしていないので利用者が作成する必要があります。
 
 ```
 # OpenAIのモデルのインスタンスを作成
@@ -127,7 +128,7 @@ llm = ChatOpenAI(
     temperature=0,
 )
 ```
-ここで使用する生成AIの種類を定義する。今回はgpt-4.1を使用している。
+ここで使用する生成AIの種類を定義しています。今回はgpt-4.1を使用しています。
 
 ```
 client = MultiServerMCPClient(
@@ -145,8 +146,8 @@ client = MultiServerMCPClient(
     }
 )
 ```
-ここで先ほど定義したWeatherのMCPなどを生成AIが認識できるようなオブジェクトを作成している。  
-argsのファイルパスが/appで始まるのは、Dockerコンテナ上でappを/以下に配置しているため。
+ここで先ほど定義したWeatherのMCPなどを生成AIが認識できるようなオブジェクトを作成しています。  
+argsのファイルパスが/appで始まるのは、Dockerコンテナ上でappを/以下に配置しているためです。
 
 ```
 async def main():
@@ -157,7 +158,7 @@ async def main():
         tools,
     )
 ```
-ここで前2つで定義していた生成AIとMCPのツール群からAIエージェントを作成している。
+ここで前2つで定義していた生成AIとMCPのツール群からAIエージェントを作成しています。
 
 ```
     messages = [
@@ -187,26 +188,26 @@ async def main():
         print(f"📤 出力トークン: {cb.completion_tokens}")
         print(f"💰 推定コスト: ${cb.total_cost:.6f}")
 ```
-最後にagent.ainvokeで生成AIにメッセージを渡して処理を実行させている。
+最後にagent.ainvokeで生成AIにメッセージを渡して処理を実行させています。
 
 ### カスタマイズ性について
 
-このように非常にシンプルな形でMCPを実装することができる。  
-MCP部分に自分が提供したい機能を実装していき、`client = MultiServerMCPClient`の部分で読み込ませることで簡単に機能追加できる。
+このように非常にシンプルな形でMCPを実装することができます。  
+MCP部分に自分が提供したい機能を実装していき、`client = MultiServerMCPClient`の部分で読み込ませることで簡単に機能追加できます。
 
-こう考えると、ファイルの読み書きとファイルの実行権限を与えれば勝手にスクリプトを書いて実行してくれるエージェントが作れそうに思える。  
-そうして作ったのがdiag-agent-execになる。
+こう考えると、ファイルの読み書きとファイルの実行権限を与えれば勝手にスクリプトを書いて実行してくれるエージェントが作れそうに思えます。  
+そうして実際に作ったのがdiag-agent-execになります。
 
 ### エージェントの対話機能
 
-エージェントを作るにあたって人間と複数回会話のキャッチボールをする必要がある。
+エージェントを作るにあたって人間と複数回会話のキャッチボールをする必要があります。
 
 ```
         response = await agent.ainvoke(
             {"messages": messages}
         )
 ```
-エージェント実行の戻り値の`response["messages"]`に今までのやり取りが全て含まれている。
+エージェント実行の戻り値の`response["messages"]`に今までのやり取りが全て含まれています。
 
 ```
     messages = initial_messages
@@ -233,5 +234,5 @@ MCP部分に自分が提供したい機能を実装していき、`client = Mult
  - メッセージ履歴の末尾に追加
  - エージェント実行
 
-を繰り返すことで対話を継続的に実行することができるようになる。
+を繰り返すことで対話を継続的に実行することができるようになりました。
 
