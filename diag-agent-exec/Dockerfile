@@ -17,7 +17,7 @@ COPY ./app/ .
 # 一般ユーザに切り替え
 USER pyuser
 
-# weather.py を直接実行
+# ai_agent.py を直接実行
 CMD ["python", "ai_agent.py"]
 # CMD ["bash"]
 

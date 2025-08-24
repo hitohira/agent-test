@@ -17,7 +17,7 @@ COPY ./app/ .
 # 一般ユーザに切り替え
 USER pyuser
 
-# weather.py を直接実行
+# mcp_test.py を直接実行
 CMD ["python", "mcp_test.py"]
 # CMD ["bash"]
 
